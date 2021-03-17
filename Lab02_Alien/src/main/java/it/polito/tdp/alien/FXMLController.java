@@ -38,14 +38,24 @@ public class FXMLController {
     private Label labelErrore;
     
     @FXML
-    void doTranslate(ActionEvent event) {
-    	if((!txtTraduzione.getText().matches( "[[a-zA-Z[ \\t\\n\\x0B\\f\\r]]*]"))||(txtTraduzione.getText().isBlank())) {
-    		labelErrore.setText("ERRORE:INSERIRE TESTO VALIDO.");
+    void doTranslate(ActionEvent event) { 
+    	String testoInput=txtTraduzione.getText();
+    	String[] input=testoInput.split(" ");
+
+    	//controllo che il campo non sia vuoto
+    	if((testoInput.isBlank())) {
+    		labelErrore.setText("ERRORE:INSERIRE TESTO");
     		txtRisultato.clear();
     		return;
     	}
-    	String[] input=(txtTraduzione.getText()).split(" ");
+    	
+    	//caso di inserimento parole
     	if(input.length>=2) {
+    		if(!testoInput.matches( "[a-zA-Z[ /s]]*")) {
+	    		labelErrore.setText("ERRORE:INSERIRE TESTO VALIDO.");
+	    		txtRisultato.clear();
+	    		return;
+	    	}
     		List<String> soloTraduzioni=new LinkedList<>();
     		for(int i=1;i<input.length;i++) {
     			soloTraduzioni.add(input[i]);
@@ -53,12 +63,21 @@ public class FXMLController {
     		this.model.add(input[0], soloTraduzioni);
     		txtRisultato.setText("PAROLA INSERITA CON SUCCESSO");
     	}else {
-    		String traduzione=this.model.translateWord(input[0]);
-    		if(traduzione==null) {
-    			txtRisultato.setText("PAROLA NON TROVATA");
+    		//caso di traduzione && testoInput.matches("[a-zA-Z]*")
+    		
+    		if(testoInput.matches("([A-Za-z]*\\?[a-zA-Z]*){0,1}|[a-zA-Z]*") ) {
+    			String traduzione=this.model.translateWord(input[0]);
+	    		if(traduzione.isBlank()) {
+	    			txtRisultato.setText("PAROLA NON TROVATA");
+	    		}else {
+	    			txtRisultato.setText(traduzione);    			
+	    		}
     		}else {
-    			txtRisultato.setText(traduzione);    			
+	    		labelErrore.setText("ERRORE:INSERIRE TESTO VALIDO.");
+	    		txtRisultato.clear();
+	    		return;
     		}
+
     	}
     	this.btnReset.setDisable(false); 
     	labelErrore.setText(null);

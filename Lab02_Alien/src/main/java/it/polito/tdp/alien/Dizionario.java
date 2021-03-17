@@ -24,12 +24,22 @@ public class Dizionario {
 	
 	public String translateWord(String parolaAliena) {
 		parolaAliena=parolaAliena.toLowerCase();
+		boolean ricercaSpeciale=false;
+		if(parolaAliena.contains("?")) {
+			parolaAliena=parolaAliena.replace('?', '.');
+			ricercaSpeciale=true;
+		}
+		String possibiliTraduzioni="";
 		for(WordEnhanced w:listaTraduzioni) {
-			if(w.getParolaAliena().equals(parolaAliena)) {
-				return w.getTraduzione();
+			if(w.getParolaAliena().matches(parolaAliena)) {
+				if(ricercaSpeciale) {
+					possibiliTraduzioni+="Forse stavi cercando: "+w.getParolaAliena()+"\n"+w.getTraduzione();
+				}else{
+					return w.getTraduzione();
+				}
 			}
 		}
-		return null;
+		return possibiliTraduzioni;
 	}
 	
 	
