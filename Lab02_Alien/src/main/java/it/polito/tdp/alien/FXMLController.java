@@ -1,6 +1,7 @@
 package it.polito.tdp.alien;
 
 import java.net.URL;
+import java.util.*;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -38,14 +39,18 @@ public class FXMLController {
     
     @FXML
     void doTranslate(ActionEvent event) {
-    	if((!txtTraduzione.getText().matches( "[a-zA-Z[ \\t\\n\\x0B\\f\\r]]*"))||(txtTraduzione.getText().isBlank())) {
+    	if((!txtTraduzione.getText().matches( "[[a-zA-Z[ \\t\\n\\x0B\\f\\r]]*]"))||(txtTraduzione.getText().isBlank())) {
     		labelErrore.setText("ERRORE:INSERIRE TESTO VALIDO.");
     		txtRisultato.clear();
     		return;
     	}
     	String[] input=(txtTraduzione.getText()).split(" ");
-    	if(input.length==2) {
-    		this.model.add(input[0], input[1]);
+    	if(input.length>=2) {
+    		List<String> soloTraduzioni=new LinkedList<>();
+    		for(int i=1;i<input.length;i++) {
+    			soloTraduzioni.add(input[i]);
+    		}
+    		this.model.add(input[0], soloTraduzioni);
     		txtRisultato.setText("PAROLA INSERITA CON SUCCESSO");
     	}else {
     		String traduzione=this.model.translateWord(input[0]);

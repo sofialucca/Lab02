@@ -4,18 +4,18 @@ import java.util.*;
 
 public class Dizionario {
 
-	private List<Word> listaTraduzioni;
+	private List<WordEnhanced> listaTraduzioni;
 	
 	public Dizionario() {
 		listaTraduzioni=new ArrayList<>();
 	}
 	
-	public void add(String parolaAliena,String traduzione) {
+	public void add(String parolaAliena,List<String> traduzione) {
 		parolaAliena=parolaAliena.toLowerCase();
-		parolaAliena=parolaAliena.toLowerCase();
-		Word nuovaWord=new Word(parolaAliena,traduzione);
-		for(Word w:listaTraduzioni) {
+		WordEnhanced nuovaWord=new WordEnhanced(parolaAliena,traduzione);
+		for(WordEnhanced w:listaTraduzioni) {
 			if(w.equals(nuovaWord)) {
+				w.addTraduzione(traduzione);
 				return;
 			}
 		}
@@ -24,7 +24,7 @@ public class Dizionario {
 	
 	public String translateWord(String parolaAliena) {
 		parolaAliena=parolaAliena.toLowerCase();
-		for(Word w:listaTraduzioni) {
+		for(WordEnhanced w:listaTraduzioni) {
 			if(w.getParolaAliena().equals(parolaAliena)) {
 				return w.getTraduzione();
 			}
